@@ -18,15 +18,15 @@ class DatabaseSeeder extends Seeder
     {
         collect([
             [
-                'name' => 'Dicky',
-                'username' => 'dicky',
-                'email' => 'dicky@mail.com',
+                'name' => 'Dicky Setiawan',
+                'username' => 'dicky.setiawan',
+                'email' => 'dickysetiawan@mail.com',
                 'password' => bcrypt('password'),
             ],
             [
-                'name' => 'Setiawan',
-                'username' => 'setiawan',
-                'email' => 'setiawan@mail.com',
+                'name' => 'Zaqi Setiawan',
+                'username' => 'zaqi.setiawan',
+                'email' => 'zaqisetiawan@mail.com',
                 'password' => bcrypt('password'),
             ]
         ])->each(fn ($user) => User::create($user));
