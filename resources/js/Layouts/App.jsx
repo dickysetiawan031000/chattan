@@ -14,7 +14,7 @@ export default function App({ title, children }) {
                             <Link
                                 key={user.id}
                                 href={route('chats.show', user.username)}
-                                className={`block p-1 hover:bg-gray-200 ${route().current('chats.show', user.username) ? 'text-black font-semibold bg-slate-200' : 'text-slate-400'}`}
+                                className={`block text-sm md:text-base p-1 hover:bg-gray-200 ${route().current('chats.show', user.username) ? 'text-black font-semibold bg-slate-200' : 'text-slate-400'}`}
                             >
                                 {user.name}
                             </Link>
