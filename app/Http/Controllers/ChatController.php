@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,7 +18,9 @@ class ChatController extends Controller
         )->orWhere(
             fn ($q) => $q->where('sender_id', $user->id)
                 ->where('receiver_id', Auth::id())
-        )->get();
+        )
+        ->orderBy('created_at', 'asc')
+        ->get();
 
         return inertia('Chats/Show', [
             'user' => $user,
@@ -31,10 +34,12 @@ class ChatController extends Controller
             'message' => 'required',
         ]);
 
-        Auth::user()->chats()->create([
+        $chat = Auth::user()->chats()->create([
             'message' => $request->message,
             'receiver_id' => $user->id,
         ]);
+
+        broadcast(new MessageSent($chat))->toOthers();
 
         return back();
     }

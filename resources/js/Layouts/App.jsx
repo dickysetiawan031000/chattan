@@ -2,7 +2,6 @@ import { Head, Link, usePage } from '@inertiajs/react'
 import React from 'react'
 
 export default function App({ title, children }) {
-    console.log(usePage())
     const { users, auth } = usePage().props
     return (
         <div className='flex min-h-screen'>
