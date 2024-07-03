@@ -39,7 +39,7 @@ class ChatController extends Controller
             'receiver_id' => $user->id,
         ]);
 
-        broadcast(new MessageSent($chat))->toOthers();
+        broadcast(new MessageSent($chat->load('receiver')))->toOthers();
 
         return back();
     }

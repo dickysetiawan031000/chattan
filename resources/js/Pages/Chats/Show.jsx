@@ -15,10 +15,8 @@ const showChat = (x, y, option = 'justify') => {
 
 export default function Show(props) {
     const { auth } = usePage().props
-
     const scrollRef = useRef(null)
     const messageRef = useRef(null)
-
     const { user, chats } = props
     const { data, setData, reset, errors, post } = useForm({ message: '' })
 
@@ -33,7 +31,7 @@ export default function Show(props) {
         })
     }
 
-    Echo.channel('chat')
+    Echo.private('chats.' + auth.user.uuid)
         .listen('MessageSent', ({ chat }) => {
             Inertia.reload({
                 preserveScroll: true,
