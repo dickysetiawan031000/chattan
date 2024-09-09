@@ -54,4 +54,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Chat::class, 'sender_id');
     }
+
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
+            ->withPivot('status', 'requested_by', 'accepted_by', 'accepted_at', 'rejected_at')
+            ->withTimestamps();
+    }
+
+    public function friendRequests()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'friend_id', 'user_id')
+            ->wherePivot('status', 'pending')
+            ->withPivot('status', 'requested_by', 'accepted_by', 'accepted_at', 'rejected_at')
+            ->withTimestamps();
+    }
 }

@@ -40,7 +40,10 @@ class HandleInertiaRequests extends Middleware
                     'location' => $request->url(),
                 ]);
             },
-            'users' => fn () => $request->user() ? User::where('id', '!=', $request->user()->id)->get() : null,
+            'users' => fn() => $request->user() ? User::where('id', '!=', $request->user()->id)->get() : null,
+            'filters' => [
+                ...$request->query(),
+            ]
         ]);
     }
 }
