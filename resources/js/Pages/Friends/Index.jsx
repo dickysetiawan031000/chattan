@@ -4,19 +4,32 @@ import { IoIosCall } from "react-icons/io";
 import { FaSearch } from "react-icons/fa";
 import { Combobox } from '@headlessui/react';
 import { useEffect, useState } from 'react';
-import { router, usePage } from '@inertiajs/react';
+import { router, useForm, usePage } from '@inertiajs/react';
 import useDebouncedSearch from '@/hooks/useDebouncedSearch';
 import { Button } from '@/shadcn/ui/button';
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger, DrawerFooter, DrawerClose } from '@/shadcn/ui/drawer';
 import { Input } from '@/shadcn/ui/input';
+import toast from 'react-hot-toast';
 
 export default function Index(props) {
+
+    console.log(props);
 
     const { filters, friends } = props
     const { params, setParams, setTimeDebounce } = useDebouncedSearch(
         route(route().current()),
         filters
     );
+
+    const { data, setData, post, reset } = useForm({ username: "" })
+
+    const addFriend = (e) => {
+        e.preventDefault()
+        post(route('friends.store'), {
+            data,
+            onSuccess: () => reset()
+        })
+    }
 
     return (
 
@@ -25,48 +38,6 @@ export default function Index(props) {
                 <h1 className="text-2xl font-semibold text-gray-900">Friends</h1>
             </div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-
-                {/* <div className='mt-5 mb-5'>
-                    <div className="w-full max-w-md mx-auto">
-                        <Combobox
-                            as="div"
-                            value={query}
-                            onChange={setQuery}
-                            onInput={(e) => {
-                                setQuery(e.target.value);
-                                handleSearch(e.target.value);
-                            }}
-                        >
-                            <div className="relative">
-                                <FaSearch
-                                    className="absolute left-3 top-3 h-5 w-5 text-gray-400"
-                                    aria-hidden="true"
-                                />
-                                <Combobox.Input
-                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    placeholder="Cari..."
-                                />
-                            </div>
-                            {results.length > 0 && (
-                                <Combobox.Options className="mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                    {results.map((result) => (
-                                        <Combobox.Option
-                                            key={result.id}
-                                            value={result.name}
-                                            className={({ active }) =>
-                                                `relative cursor-default select-none py-2 pl-3 pr-9 ${active ? 'bg-indigo-600 text-white' : 'text-gray-900'
-                                                }`
-                                            }
-                                        >
-                                            {result.name}
-                                        </Combobox.Option>
-                                    ))}
-                                </Combobox.Options>
-                            )}
-                        </Combobox>
-                    </div>
-                </div> */}
-
                 <input
                     type="text"
                     name='search'
@@ -91,11 +62,18 @@ export default function Index(props) {
                             </DrawerHeader>
 
                             <DrawerFooter>
-                            <Input type="email" placeholder="Email or Username" className="mb-5" />
-                                <Button className="mb-10">Search</Button>
-                                {/* <DrawerClose asChild>
-                                    <Button variant="outline">Cancel</Button>
-                                </DrawerClose> */}
+
+                                <form onSubmit={addFriend}>
+                                    <input
+                                        autoComplete={"off"}
+                                        value={data.username}
+                                        onChange={(e) => setData({ ...data, username: e.target.value })}
+                                        type="text"
+                                        className='w-full form-text border-1 focus:border-0 rounded-lg'
+                                        placeholder='Type a username or email...'
+                                    />
+                                    <Button type="submit" className="mt-5 mb-5">Send Request</Button>
+                                </form>
                             </DrawerFooter>
                         </div>
                     </DrawerContent>

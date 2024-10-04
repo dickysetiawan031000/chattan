@@ -47,7 +47,7 @@ class User extends Authenticatable
 
     public static function booted()
     {
-        static::creating(fn (User $user) => $user->uuid = Str::uuid());
+        static::creating(fn(User $user) => $user->uuid = Str::uuid());
     }
 
     public function chats()
@@ -59,14 +59,15 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
             ->withPivot('status', 'requested_by', 'accepted_by', 'accepted_at', 'rejected_at')
+            ->wherePivot('status', 'accepted')
             ->withTimestamps();
     }
 
     public function friendRequests()
     {
         return $this->belongsToMany(User::class, 'friendships', 'friend_id', 'user_id')
-            ->wherePivot('status', 'pending')
             ->withPivot('status', 'requested_by', 'accepted_by', 'accepted_at', 'rejected_at')
+            ->wherePivot('status', 'pending')
             ->withTimestamps();
     }
 }

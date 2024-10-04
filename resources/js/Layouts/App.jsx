@@ -1,5 +1,5 @@
 
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 
 import { FaBars } from "react-icons/fa6";
@@ -7,10 +7,13 @@ import { FaUserFriends } from "react-icons/fa";
 import { MdSpaceDashboard } from "react-icons/md";
 import { MdOutlineMessage } from "react-icons/md";
 import Header from '@/Components/Header';
+import { usePage } from '@inertiajs/react';
+import { Toaster, toast } from 'react-hot-toast';
 
 const navigation = [
-    { name: 'Dashboard', href: '/', icon: MdSpaceDashboard, current: true },
-    { name: 'Friends', href: '/friends', icon: FaUserFriends, current: false },
+    { name: 'Dashboard', href: '/', icon: MdSpaceDashboard },
+    { name: 'Friends', href: '/friends', icon: FaUserFriends },
+    { name: 'Friend Request', href: '/friends/request', icon: FaUserFriends },
 ]
 
 function classNames(...classes) {
@@ -19,8 +22,13 @@ function classNames(...classes) {
 
 export default function App({ children, ...props }) {
 
+    const { flash } = usePage().props
+
+    useEffect(() => {
+        flash.status && toast[flash.status](flash.message)
+    }, [flash])
+
     const friends = props.friends
-    console.log(friends);
 
 
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -122,7 +130,7 @@ export default function App({ children, ...props }) {
                                 </div>
                             </div>
                         </Transition.Child>
-                        <div className="flex-shrink-0 w-14">{/* Force sidebar to shrink to fit close icon */}</div>
+                        {/* <div className="flex-shrink-0 w-14">Force sidebar to shrink to fit close icon</div> */}
                     </Dialog>
                 </Transition.Root>
 
@@ -192,6 +200,45 @@ export default function App({ children, ...props }) {
                     </div>
                     <main className="flex-1">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+
+                            <div className="mt-4">
+                                {
+                                    flash.status && <Toaster
+                                        position="top-center"
+                                        reverseOrder={false}
+                                        toastOptions={{
+                                            style: {
+                                                padding: '14px',
+                                                fontSize: '0.9rem',
+                                                boxShadow: '0 0 10px rgba(0, 0, 0, 0.25)',
+                                                minWidth: '250px',
+                                                width: 'auto',
+                                                maxWidth: '100%',
+                                            },
+                                            error: {
+                                                style: {
+                                                    background: '#dc2626',
+                                                    color: '#F3F4F6',
+                                                },
+                                                iconTheme: {
+                                                    primary: '#F3F4F6',
+                                                    secondary: '#dc2626',
+                                                }
+                                            },
+                                            success: {
+                                                style: {
+                                                    background: '#059669',
+                                                    color: '#F3F4F6',
+                                                },
+                                                iconTheme: {
+                                                    primary: '#F3F4F6',
+                                                    secondary: '#059669',
+                                                }
+                                            }
+                                        }}
+                                    />
+                                }
+                            </div>
                             {children}
                         </div>
                     </main>

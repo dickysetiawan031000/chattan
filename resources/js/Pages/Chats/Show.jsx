@@ -89,7 +89,16 @@ export default function Show(props) {
                 </div>
                 <div className='border-t px-6 py-2'>
                     <form onSubmit={submitHandler}>
-                        <input onKeyUp={onTyping} ref={messageRef} autoComplete={"off"} value={data.message} onChange={(e) => setData({ ...data, message: e.target.value })} type="text" className='w-full form-text border-0 focus:border-0 focus:ring-0 focus:outline-none' placeholder='Type a message...' />
+                        <input
+                            onKeyUp={onTyping}
+                            ref={messageRef}
+                            autoComplete={"off"}
+                            value={data.message}
+                            onChange={(e) => setData({ ...data, message: e.target.value })}
+                            type="text"
+                            className='w-full form-text border-0 focus:border-0 focus:ring-0 focus:outline-none'
+                            placeholder='Type a message...'
+                        />
                     </form>
                 </div>
             </div>

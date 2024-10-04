@@ -13,6 +13,7 @@ Route::middleware('auth')->group(function() {
     Route::post('/chat/{user:username}', [ChatController::class, 'store'])->name('chats.store');
 
     Route::resource('friends', FriendshipController::class)->only(['index', 'store', 'destroy']);
+    Route::get('friends/request', [FriendshipController::class, 'friendRequest'])->name('friend.request');
 });
 
 require __DIR__.'/auth.php';
