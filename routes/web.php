@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -13,7 +14,9 @@ Route::middleware('auth')->group(function() {
     Route::post('/chat/{user:username}', [ChatController::class, 'store'])->name('chats.store');
 
     Route::resource('friends', FriendshipController::class)->only(['index', 'store', 'destroy']);
-    Route::get('friends/request', [FriendshipController::class, 'friendRequest'])->name('friend.request');
+    Route::resource('friend-request', FriendRequestController::class)->only(['index', 'store', 'destroy']);
+    Route::get('friend-request/accept/{user:username}', [FriendRequestController::class, 'acceptFriendRequest'])->name('friend.accept');
+    // Route::get('friends/request', [FriendshipController::class, 'friendRequest'])->name('friend.request');
 });
 
 require __DIR__.'/auth.php';

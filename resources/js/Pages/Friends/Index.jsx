@@ -13,8 +13,6 @@ import toast from 'react-hot-toast';
 
 export default function Index(props) {
 
-    console.log(props);
-
     const { filters, friends } = props
     const { params, setParams, setTimeDebounce } = useDebouncedSearch(
         route(route().current()),
@@ -25,7 +23,7 @@ export default function Index(props) {
 
     const addFriend = (e) => {
         e.preventDefault()
-        post(route('friends.store'), {
+        post(route('friend-request.store'), {
             data,
             onSuccess: () => reset()
         })
@@ -65,6 +63,7 @@ export default function Index(props) {
 
                                 <form onSubmit={addFriend}>
                                     <input
+                                        required
                                         autoComplete={"off"}
                                         value={data.username}
                                         onChange={(e) => setData({ ...data, username: e.target.value })}

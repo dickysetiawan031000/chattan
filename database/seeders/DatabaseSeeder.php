@@ -33,7 +33,6 @@ class DatabaseSeeder extends Seeder
         ])->each(fn ($user) => User::create($user));
 
         \App\Models\User::factory(10)->create();
-        $this->call(FriendshipSeeder::class);
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
