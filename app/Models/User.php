@@ -74,4 +74,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(FriendRequest::class, 'sender_id');
     }
+
+    public function countUnreadFriendRequests()
+    {
+        return $this->hasMany(FriendRequest::class, 'receiver_id')
+            ->where('is_read', false)
+            ->count();
+    }
+
 }

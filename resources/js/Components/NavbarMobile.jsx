@@ -82,14 +82,17 @@ export default function NavbarMobile({ navigations, auth, sidebarOpen, setSideba
                                             />
                                             {item.name}
                                         </div>
-                                        <span
-                                            className={classNames(
-                                                item.current ? 'bg-gray-800' : 'bg-gray-900 group-hover:bg-gray-800',
-                                                'inline-block py-0.5 px-3 text-xs text-white font-medium rounded-full'
-                                            )}
-                                        >
-                                            14
-                                        </span>
+                                        {item.countNotif > 0 && (
+                                            <span
+                                                className={classNames(
+                                                    item.current ? 'bg-gray-800' : 'bg-gray-900 group-hover:bg-gray-800',
+                                                    'inline-block py-0.5 px-3 text-xs text-white font-medium rounded-full'
+                                                )}
+                                            >
+                                                {item.countNotif}
+                                            </span>
+
+                                        )}
                                     </a>
                                 ))}
                             </nav>

@@ -1,12 +1,7 @@
 import toast from "react-hot-toast";
 
 export default function Toast(data) {
-    console.log("data toast", data);
-
     const { status, message } = data;
-    console.log("status", status);
-    console.log("message", message);
-
     return (
         <div>
             {status === "success" && toast.success(message)}

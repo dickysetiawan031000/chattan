@@ -7,16 +7,11 @@ import { FaUserFriends } from "react-icons/fa";
 import { MdSpaceDashboard } from "react-icons/md";
 import { MdOutlineMessage } from "react-icons/md";
 import Header from '@/Components/Header';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { Toaster, toast } from 'react-hot-toast';
 import Toast from '@/Components/Toast';
 import NavbarMobile from '@/Components/NavbarMobile';
-
-const navigations = [
-    { name: 'Dashboard', href: '/', icon: MdSpaceDashboard },
-    { name: 'Friends', href: '/friends', icon: FaUserFriends },
-    { name: 'Friend Request', href: '/friend-request', icon: FaUserFriends },
-]
+import { Inertia } from '@inertiajs/inertia';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -25,13 +20,23 @@ function classNames(...classes) {
 export default function App({ children, ...props }) {
 
     const { flash, auth } = usePage().props
+    const [sidebarOpen, setSidebarOpen] = useState(false)
+
+    const navigations = [
+        { name: 'Dashboard', href: '/', icon: MdSpaceDashboard, countNotif: 0 },
+        { name: 'Friends', href: '/friends', icon: FaUserFriends, countNotif: 0 },
+        { name: 'Friend Request', href: '/friend-request', icon: FaUserFriends, countNotif: auth.totalFriendRequests },
+    ]
 
     useEffect(() => {
         flash.status && Toast(flash)
     }
         , [flash])
 
-    const [sidebarOpen, setSidebarOpen] = useState(false)
+    Echo.channel('sent-friend-request').listen('AddFriendSent', () => {
+        router.reload()
+    })
+
 
     return (
         <>
@@ -69,14 +74,17 @@ export default function App({ children, ...props }) {
                                             />
                                             {item.name}
                                         </div>
-                                        <span
-                                            className={classNames(
-                                                item.current ? 'bg-gray-800' : 'bg-gray-900 group-hover:bg-gray-800',
-                                                'inline-block py-0.5 px-3 text-xs text-white font-medium rounded-full'
-                                            )}
-                                        >
-                                            14
-                                        </span>
+                                        {item.countNotif > 0 && (
+                                            <span
+                                                className={classNames(
+                                                    item.current ? 'bg-gray-800' : 'bg-gray-900 group-hover:bg-gray-800',
+                                                    'inline-block py-0.5 px-3 text-xs text-white font-medium rounded-full'
+                                                )}
+                                            >
+                                                {item.countNotif}
+                                            </span>
+
+                                        )}
                                     </a>
                                 ))}
                             </nav>
@@ -118,14 +126,13 @@ export default function App({ children, ...props }) {
                     </div>
                     <main className="flex-1">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-                            <div className="mt-5">
-                                {
-                                    flash.status && <Toaster
-                                        position="top-center"
-                                        reverseOrder={false}
-                                    />
-                                }
-                            </div>
+                            {
+                                flash.status && <Toaster
+                                    position="top-center"
+                                    reverseOrder={false}
+                                />
+                            }
+
                             {children}
                         </div>
                     </main>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AddFriendSent;
 use App\Http\Requests\Friend\FriendRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ class FriendRequestController extends Controller
 
     public function store(Request $request)
     {
+
         try {
             $usernameOrEmail = $request->input('username');
             $authUser = auth()->user();
@@ -27,6 +29,7 @@ class FriendRequestController extends Controller
             $user = User::where('username', $usernameOrEmail)
                 ->orWhere('email', $usernameOrEmail)
                 ->firstOrFail();
+
 
             // Check if the user is already a friend
             $friendship = $authUser->friends()->where('friend_id', $user->id)->exists();
@@ -50,6 +53,12 @@ class FriendRequestController extends Controller
                 'sender_id' => $authUser->id,
                 'receiver_id' => $user->id,
             ]);
+
+            // count friend requests where is read is false
+            $friendRequestsCount = $user->countUnreadFriendRequests();
+
+            // send notification to the user
+            broadcast(new AddFriendSent($friendRequestsCount))->toOthers();
 
             return back()->with('status', 'success')
                 ->with('message', 'Friend request sent.');
