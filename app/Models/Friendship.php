@@ -33,14 +33,4 @@ class Friendship extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public function requestedBy()
-    {
-        return $this->belongsTo(User::class, 'requested_by');
-    }
-
-    public function acceptedBy()
-    {
-        return $this->belongsTo(User::class, 'accepted_by');
-    }
 }

@@ -13,6 +13,12 @@ class FriendRequestController extends Controller
     {
         $friendRequests = auth()->user()->friendRequests;
 
+        foreach ($friendRequests as $friendRequest) {
+            $friendRequest->pivot->update([
+                'is_read' => true,
+            ]);
+        }
+
         return inertia('FriendRequest/Index', [
             'friendRequests' => $friendRequests,
         ]);
@@ -55,7 +61,7 @@ class FriendRequestController extends Controller
             ]);
 
             // count friend requests where is read is false
-            $friendRequestsCount = $user->countUnreadFriendRequests();
+            $friendRequestsCount = $user->unreadFriendRequests()->count();
 
             // send notification to the user
             broadcast(new AddFriendSent($friendRequestsCount))->toOthers();
@@ -105,4 +111,44 @@ class FriendRequestController extends Controller
             ]);
         }
     }
+
+    public function countUnreadFriendRequests()
+    {
+        try {
+            $unreadFriendRequests = auth()->user()->unreadFriendRequests()->count();
+
+            return response()->json([
+                'status' => 'success',
+                'unreadFriendRequests' => $unreadFriendRequests,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ]);
+        }
+    }
+
+    // public function markAsRead()
+    // {
+    //     try {
+    //         $unreadFriendRequests = auth()->user()->unreadFriendRequests()->get();
+
+    //         foreach ($unreadFriendRequests as $unreadFriendRequest) {
+    //             $unreadFriendRequest->pivot->update([
+    //                 'is_read' => true,
+    //             ]);
+    //         }
+
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'message' => 'Friend requests marked as read.',
+    //         ]);
+    //     } catch (\Throwable $th) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => $th->getMessage(),
+    //         ]);
+    //     }
+    // }
 }

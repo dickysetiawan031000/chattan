@@ -66,7 +66,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'friend_requests', 'receiver_id', 'sender_id')
             ->wherePivot('status', 'pending')
-            ->withPivot('status', 'sender_id', 'receiver_id')
+            ->withPivot('status', 'sender_id', 'receiver_id', 'is_read')
             ->withTimestamps();
     }
 
@@ -75,11 +75,12 @@ class User extends Authenticatable
         return $this->hasMany(FriendRequest::class, 'sender_id');
     }
 
-    public function countUnreadFriendRequests()
-    {
-        return $this->hasMany(FriendRequest::class, 'receiver_id')
-            ->where('is_read', false)
-            ->count();
-    }
-
+    // public function unreadFriendRequests()
+    // {
+    //     return $this->belongsToMany(User::class, 'friend_requests', 'receiver_id', 'sender_id')
+    //         ->wherePivot('is_read', false)
+    //         ->wherePivot('status', 'pending')
+    //         ->withPivot('is_read', 'sender_id', 'receiver_id')
+    //         ->withTimestamps();
+    // }
 }

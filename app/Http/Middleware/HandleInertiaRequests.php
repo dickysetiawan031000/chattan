@@ -34,7 +34,9 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
-                'totalFriendRequests' => @$request->user()->countUnreadFriendRequests() ?: 0,
+                // 'totalFriendRequests' =>  $request->user() ? $request->user()->friendRequests()
+                //     ->where('is_read', false)
+                //     ->count() : 0,
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [

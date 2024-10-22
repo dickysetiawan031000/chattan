@@ -62,7 +62,8 @@ export default function NavbarMobile({ navigations, auth, sidebarOpen, setSideba
                             </div>
                             <nav className="mt-5 px-2 space-y-1">
                                 {navigations.map((item) => (
-                                    <a
+                                    <Link
+                                        preserveState={false}
                                         key={item.name}
                                         href={item.href}
                                         className={classNames(
@@ -93,7 +94,7 @@ export default function NavbarMobile({ navigations, auth, sidebarOpen, setSideba
                                             </span>
 
                                         )}
-                                    </a>
+                                    </Link>
                                 ))}
                             </nav>
                         </div>

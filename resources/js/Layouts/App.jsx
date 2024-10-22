@@ -21,11 +21,12 @@ export default function App({ children, ...props }) {
 
     const { flash, auth } = usePage().props
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [totalFriendRequests, setTotalFriendRequests] = useState(0)
 
     const navigations = [
         { name: 'Dashboard', href: '/', icon: MdSpaceDashboard, countNotif: 0 },
         { name: 'Friends', href: '/friends', icon: FaUserFriends, countNotif: 0 },
-        { name: 'Friend Request', href: '/friend-request', icon: FaUserFriends, countNotif: auth.totalFriendRequests },
+        { name: 'Friend Request', href: '/friend-request', icon: FaUserFriends, countNotif: totalFriendRequests },
     ]
 
     useEffect(() => {
@@ -37,11 +38,17 @@ export default function App({ children, ...props }) {
         router.reload()
     })
 
+    useEffect(() => {
+        axios.get('friend-request/count').then(response => {
+            setTotalFriendRequests(response.data.unreadFriendRequests)
+        });
+    }, [new Date().toLocaleTimeString()]);
 
     return (
         <>
             <div>
                 <NavbarMobile navigations={navigations} auth={auth} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+
                 {/* Static sidebar for desktop */}
                 <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
                     {/* Sidebar component, swap this element with another sidebar if you like */}
@@ -56,7 +63,7 @@ export default function App({ children, ...props }) {
                             </div>
                             <nav className="mt-5 flex-1 px-2 bg-white space-y-1">
                                 {navigations.map((item) => (
-                                    <a
+                                    <Link
                                         key={item.name}
                                         href={item.href}
                                         className={classNames(
@@ -85,7 +92,7 @@ export default function App({ children, ...props }) {
                                             </span>
 
                                         )}
-                                    </a>
+                                    </Link>
                                 ))}
                             </nav>
                         </div>
